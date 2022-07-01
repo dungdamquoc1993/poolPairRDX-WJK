@@ -658,8 +658,8 @@
       ]
     },
     "/Users/damquocdung/Desktop/rdxSwap_main/rdxswap_sc/contracts/PoolPair.sol": {
-      "lastModificationDate": 1656570749512,
-      "contentHash": "d3c83390d08ba64ea8017fdc842f7a8b",
+      "lastModificationDate": 1656652905362,
+      "contentHash": "8a3a94e564a2f8dc1860a76c6d21c24d",
       "sourceName": "contracts/PoolPair.sol",
       "solcConfig": {
         "version": "0.8.0",
@@ -688,7 +688,6 @@
         "./IERC20.sol",
         "./SafeERC20.sol",
         "./LPToken.sol",
-        "./libraries/Math.sol",
         "./libraries/SafeMath.sol"
       ],
       "versionPragmas": [

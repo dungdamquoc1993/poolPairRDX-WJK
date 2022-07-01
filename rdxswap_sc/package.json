@@ -11,6 +11,7 @@
     "@nomiclabs/hardhat-etherscan": "^3.1.0",
     "hardhat-deploy": "^0.11.10",
     "jest": "^28.1.1",
+    "react-toastify": "^9.0.5",
     "ts-node": "^10.8.1"
   }
 }

@@ -5,7 +5,6 @@ pragma solidity ^0.8.0;
 import "./IERC20.sol";
 import "./SafeERC20.sol";
 import "./LPToken.sol";
-import "./libraries/Math.sol";
 import "./libraries/SafeMath.sol";
 // import "hardhat/console.sol";
 
@@ -55,7 +54,7 @@ contract PoolPair is LPToken {
     ) internal pure returns (uint256 amountB) {
         require(amountA > 0, "INSUFFICIENT_AMOUNT");
         require(reserveA > 0 && reserveB > 0, "INSUFFICIENT_LIQUIDITY");
-        amountB = amountA.mul(reserveB) / reserveA;
+        amountB = (amountA * reserveB) / (reserveA);
     }
 
     function _addLiquidity(
@@ -125,11 +124,11 @@ contract PoolPair is LPToken {
 
         uint256 _totalSupply = totalSupply();
         if (_totalSupply == 0) {
-            liquidity = (amount0).mul(amount1) / 1e12;
-            lpTokenPerToken = liquidity / min(amount0, amount1);
+            liquidity = (amount0 * amount1) / 1e12;
+            lpTokenPerToken = liquidity / (min(amount0, amount1));
             _mint(to, liquidity);
         } else {
-            liquidity = lpTokenPerToken * amount0;
+            liquidity = lpTokenPerToken * (min(amount0, amount1));
             _mint(to, liquidity);
         }
         require(liquidity > 0, "INSUFFICIENT_LIQUIDITY_MINTED");
@@ -169,9 +168,9 @@ contract PoolPair is LPToken {
         uint256 balance0 = _token0.balanceOf(address(this));
         uint256 balance1 = _token1.balanceOf(address(this));
 
-        amount0 = liquidity.mul(balance0).div(_totalSupply); 
-        amount1 = liquidity.mul(balance1).div(_totalSupply); 
-        
+        amount0 = (liquidity * balance0) / (_totalSupply);
+        amount1 = (liquidity * balance1) / (_totalSupply);
+
         require(amount0 > 0 && amount1 > 0, "INSUFFICIENT_LIQUIDITY_BURNED");
         _burn(address(this), liquidity);
         _token0.safeTransfer(to, amount0);
@@ -194,9 +193,9 @@ contract PoolPair is LPToken {
         IERC20 _token1 = token1;
         uint256 tokenOutAmount;
         require(tokenIn == _token0 || tokenIn == _token1, "swap in wrong pool");
-        
+
         if (tokenIn == _token0) {
-            tokenOutAmount = _reserve1.mul(amount).div(_reserve0.add(amount));
+            tokenOutAmount = (_reserve1 * amount) / (_reserve0 + amount);
             require(tokenOutAmount > minOut, "swap dose not statisfied user");
             _token0.safeTransferFrom(
                 address(msg.sender),
@@ -205,7 +204,7 @@ contract PoolPair is LPToken {
             );
             _token1.safeTransfer(address(msg.sender), tokenOutAmount);
         } else if (tokenIn == _token1) {
-            tokenOutAmount = _reserve0.mul(amount).div(_reserve1.add(amount));
+            tokenOutAmount = (_reserve0 * amount) / (_reserve1 + amount);
             require(tokenOutAmount > minOut, "swap dose not statisfied user");
             _token1.safeTransferFrom(
                 address(msg.sender),
@@ -221,4 +220,3 @@ contract PoolPair is LPToken {
         return true;
     }
 }
-
