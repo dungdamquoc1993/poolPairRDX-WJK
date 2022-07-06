@@ -26,7 +26,7 @@ contract PoolPair is LPToken {
         uint256 tokenInAmount,
         uint256 tokenOutAmount
     );
-
+    
     IERC20 public token0;
     IERC20 public token1;
     uint256 private reserve0 = 0;
@@ -77,7 +77,7 @@ contract PoolPair is LPToken {
                     reserveB,
                     reserveA
                 );
-                assert(amountAOptimal <= amountADesired);
+                require(amountAOptimal <= amountADesired,'both amountA and amountB is less than user expect, transaction invalid'); 
                 require(amountAOptimal >= amountAMin, "INSUFFICIENT_A_AMOUNT");
                 (amountA, amountB) = (amountAOptimal, amountBDesired);
             }
@@ -133,13 +133,17 @@ contract PoolPair is LPToken {
         }
         require(liquidity > 0, "INSUFFICIENT_LIQUIDITY_MINTED");
 
-        _update(balance0, balance1);
+        _update();
         emit Mint(msg.sender, amount0, amount1);
     }
 
-    function _update(uint256 balance0, uint256 balance1) private {
-        reserve0 = uint256(balance0);
-        reserve1 = uint256(balance1);
+    function _update() private {
+        IERC20 _toekn0 = token0;
+        IERC20 _toekn1 = token1;
+        uint256 balance0 = _toekn0.balanceOf(address(this));
+        uint256 balance1 = _toekn1.balanceOf(address(this));
+        reserve0 = balance0;
+        reserve1 = balance1;
     }
 
     function removeLiquidity(
@@ -149,13 +153,13 @@ contract PoolPair is LPToken {
         address to
     ) public {
         transferByPool(msg.sender, address(this), liquidity);
-        (uint256 amount0, uint256 amount1) = burnAndTransfer(to);
+        (uint256 amount0, uint256 amount1) = burnAndTransfer(to, liquidity);
 
         require(amount0 >= amountAMin, "INSUFFICIENT_A_AMOUNT");
         require(amount1 >= amountBMin, "INSUFFICIENT_B_AMOUNT");
     }
 
-    function burnAndTransfer(address to)
+    function burnAndTransfer(address to, uint256 liquidity)
         internal
         returns (uint256 amount0, uint256 amount1)
     {
@@ -163,7 +167,6 @@ contract PoolPair is LPToken {
         IERC20 _token1 = token1;
 
         uint256 _totalSupply = totalSupply();
-        uint256 liquidity = balanceOf(address(this));
 
         uint256 balance0 = _token0.balanceOf(address(this));
         uint256 balance1 = _token1.balanceOf(address(this));
@@ -176,10 +179,7 @@ contract PoolPair is LPToken {
         _token0.safeTransfer(to, amount0);
         _token1.safeTransfer(to, amount1);
 
-        balance0 = _token0.balanceOf(address(this));
-        balance1 = _token1.balanceOf(address(this));
-
-        _update(balance0, balance1);
+        _update();
         emit Burn(msg.sender, amount0, amount1, to);
     }
 
@@ -213,9 +213,8 @@ contract PoolPair is LPToken {
             );
             _token0.safeTransfer(address(msg.sender), tokenOutAmount);
         }
-        uint256 balance0 = _token0.balanceOf(address(this));
-        uint256 balance1 = _token1.balanceOf(address(this));
-        _update(balance0, balance1);
+
+        _update();
         emit Swap(msg.sender, tokenIn, amount, tokenOutAmount);
         return true;
     }

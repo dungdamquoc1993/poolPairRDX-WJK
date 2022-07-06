@@ -68,7 +68,7 @@ function App() {
     await getReserves()
   }
 
-
+  //done
   const mintRDX = async () => {
     const contract = await getContract('RDX')
     if (contract != null) {
@@ -82,7 +82,7 @@ function App() {
       }
     } else alert('get RDX contract failed')
   }
-
+  //done
   const mintWJK = async () => {
     const contract = await getContract('WJK')
     if (contract != null) {
@@ -97,7 +97,7 @@ function App() {
     } else alert('get WJK contract failed')
 
   }
-
+  //done
   const getRDXBal = async () => {
     const contract = await getContract('RDX')
     if (contract != null) {
@@ -109,6 +109,7 @@ function App() {
       }
     } else alert('get RDX contract failed')
   }
+  //done
   const getWJKBal = async () => {
     const contract = await getContract('WJK')
     if (contract != null) {
@@ -120,6 +121,7 @@ function App() {
       }
     } else alert('get WJK contract failed')
   }
+  //done
   const getRDLPBal = async () => {
     const contract = await getContract('POO')
     if (contract != null) {
@@ -131,7 +133,7 @@ function App() {
       }
     } else alert('get PoolPair contract failed')
   }
-
+  // done
   const getRDXAllowance = async () => {
     const contract = await getContract('RDX')
     if (contract != null) {
@@ -144,6 +146,7 @@ function App() {
       }
     } alert('get RDX contract faied')
   }
+  // done
   const getWJKAllowance = async () => {
     const contract = await getContract('WJK')
     if (contract != null) {
@@ -156,6 +159,7 @@ function App() {
       }
     } alert('get RDX contract faied')
   }
+  // done
   const getReserves = async () => {
     const contract = await getContract('POO')
     if (contract != null) {
@@ -175,7 +179,7 @@ function App() {
   const [wjkExpect, setWjkExpect] = useState<any>(0)
   const [rdxMin, setRdxMin] = useState<any>(0)
   const [wjkMin, setWjkMin] = useState<any>(0)
-
+  // done
   const addLiquidity = async () => {
     const pooContract = await getContract('POO')
     const rdxContract = await getContract('RDX')
@@ -226,7 +230,7 @@ function App() {
   const [lpToBurn, setLpToBurn] = useState<any>(0)
   const [rdxMinBack, setRdxMinBack] = useState<any>(0)
   const [wjkMinBack, setWjkMinBack] = useState<any>(0)
-
+  // done
   const removeLiquidity = async () => {
     const contract = await getContract('POO')
     if (contract != null) {
